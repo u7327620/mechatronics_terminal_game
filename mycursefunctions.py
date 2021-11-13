@@ -45,7 +45,6 @@ def flash_home(screen):
                        "press q for button test\n"
                        "press w for terminal counting test\n"
                        "press e for astronaut blink test\n"
-                       "press r for nature blink test\n"
                        "press f to start the game\n")
     screen.refresh()
 
@@ -58,3 +57,7 @@ def counting(screen):
         print_text(screen, f'We are at {i}')
     time.sleep(.5)
     flash_home(screen)
+
+def clearline(screen, line):
+    screen.move(line, 0)
+    screen.clrtoeol()
