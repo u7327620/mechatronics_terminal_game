@@ -18,8 +18,6 @@ def end_screen(screen):
     curses.echo()
     curses.endwin()
 
-
-
 def start_screen():
     screen = curses.initscr()  # Initialize screen
     curses.noecho()
@@ -27,6 +25,11 @@ def start_screen():
     screen.keypad(True)
     curses.curs_set(0)
     return screen
+
+def start_window():
+    curses.initscr()
+    window = curses.newwin(5, 5, 5, 5)
+    return window
 
 
 def print_text(screen, text):

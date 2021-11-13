@@ -33,13 +33,16 @@ def astro_init(path, conn):
                 else:
                     msg += 'not pressed'
                 conn.send(msg)
-                time.sleep(.05)
 
         if msg == 'game':
             while True:
-                msg = []
+                msg = [0, 0]
                 if Astronaut.digital[3].read() is True:
-                    msg.append("b1 p")
+                    msg[0] = 1
+                else:
+                    msg[0] = 0
                 if Astronaut.digital[4].read() is True:
-                    msg.append("b2 p")
+                    msg[1] = 1
+                else:
+                    msg[1] = 0
                 conn.send(msg)

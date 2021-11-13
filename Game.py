@@ -7,8 +7,8 @@ import time
 
 os.environ["TERM"] = "linux"
 
-def game(astro_conn, nature_conn, screen):  # main process, takes inputs from the controllers
 
+def game(astro_conn, nature_conn, screen):  # main process, takes inputs from the controllers
     print_text(screen, "Initializing...")  # Just waiting until the two nanos sends a message back
     while True:
         if astro_conn.recv() == "Init complete":
@@ -35,44 +35,56 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
 
         if inp == ord('q'):  # if a q, do button test
             astro_conn.send("button")  # communicating that we want to button test, very important
-            end_time = time.time() + 4  # 4 seconds into the future!
+            end_time = time.time() + 6  # 4 seconds into the future!
             while time.time() < end_time:
-                msg = astro_conn.recv()  # If you only tell things what to do and never listen, you will never truly
-                print_text(screen, msg)  # get a strong understanding of what is going on
+                if astro_conn.poll() is True:
+                    msg = astro_conn.recv()  # If you only tell things what to do and never listen, you will never truly
+                    print_text(screen, msg)  # get a strong understanding of what is going on
             flash_home(screen)  # My dearest menu screen, oh please cometh back and bless thine eyes with your presence
 
         if inp == ord('f'):  # if F, game time boys
-            astro_conn.send('game')  # I deadass told the controller "game". I think it's kinda funny tbh
+            astro_conn.send('game')  # une bruh momento game funi innit buv こわいおね？
+
             oxy = 100.0
             volta = 5
             voltb = 5
             screen.clear()
 
             gamereadout(screen, oxy, volta, voltb)
-            clearline(screen, 10)
-            add_text(screen, 10, 0, astro_conn.recv())
-            add_text(screen, 0, 0, time.asctime(time.localtime()), curses.A_DIM)
             for i in range(10, -1, -1):
+                add_text(screen, 0, 0, time.asctime(time.localtime()))
+                add_text(screen, 10, 0, astro_conn.recv())
                 clearline(screen, 6)
-                add_text(screen, 6, 0, f"Hello Astronaut, this is ground control here, we are going to have lift off in:{i}")
+                add_text(screen, 6, 0, f"Hello Astronaut, this is ground control here, we are going to have lift off "
+                                       f"in: {i}\nI am going need you to manage the oxygen and voltage levels"
+                                       f" on your ship\nPay attention for messages from me that will pop up down here"
+                                       f" as I will be informing you what your buttons do")
                 time.sleep(1)
             clearline(screen, 6)
+            clearline(screen, 7)
+            clearline(screen, 8)
             add_text(screen, 6, 0, f"We have lift off!")
             time.sleep(2)
-
-            for msg in astro_conn.recv():
-                pass
-
-
-
-
-
+            clearline(screen, 6)
+            add_text(screen, 6, 0, f"Emergency!\n" 
+                                   f"A comet shower has been knocked off course and is heading directly towards your "
+                                   f"ship\nThis is a  t e r r i b l e  coincidence, I'm going to need you to react to"
+                                   f"a series of quicktime events because that's how you dodge meteors in a terminal\n"
+                                   f"Make sure you have your fingers on your right and left buttons and press the left "
+                                   f"button when you are ready")
+            while True:
+                msg = astro_conn.recv()
+                if msg[0] == 1:
+                    break
+            print_text(screen, "Let's go!")
 
 
 if __name__ == "__main__":
-    astronaut_conn, game_conn1 = Pipe()  # Like mario, we have a pipe to jump message through
+    astronaut_conn, game_conn1 = Pipe(True)  # Like mario, we have a pipe to jump message through
+    # astronaut_conn2, game_conn2 = Pipe() this one is for luigi! yeah this is deprecated but I like the comment
+    # so I'm not removing it
     mainScreen = start_screen()  # Start our screen
-    x = mp.Process(target=astro_init, args=('/dev/ttyUSB0', game_conn1))  # Multiprocess create astro controller
+    x = mp.Process(target=astro_init, args=('/dev/ttyUSB0', game_conn1,))  # Multiprocess create astro controller
     y = mp.Process(target=game, args=(astronaut_conn, 0, mainScreen))  # Multiprocess create the game
     x.start()  # Multiprocess start astro controller process
     y.start()  # Multiprocess start game process
