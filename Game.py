@@ -53,7 +53,6 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             gamereadout(screen, oxy, volta, voltb)
             for i in range(10, -1, -1):
                 add_text(screen, 0, 0, time.asctime(time.localtime()))
-                add_text(screen, 10, 0, astro_conn.recv())
                 clearline(screen, 6)
                 add_text(screen, 6, 0, f"Hello Astronaut, this is ground control here, we are going to have lift off "
                                        f"in: {i}\nI am going need you to manage the oxygen and voltage levels"
@@ -65,18 +64,50 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             clearline(screen, 8)
             add_text(screen, 6, 0, f"We have lift off!")
             time.sleep(2)
+            add_text(screen, 0, 0, time.asctime(time.localtime()))
             clearline(screen, 6)
             add_text(screen, 6, 0, f"Emergency!\n" 
                                    f"A comet shower has been knocked off course and is heading directly towards your "
-                                   f"ship\nThis is a  t e r r i b l e  coincidence, I'm going to need you to react to"
+                                   f"ship\nThis is a  t e r r i b l e  coincidence, I'm going to need you to react to "
                                    f"a series of quicktime events because that's how you dodge meteors in a terminal\n"
                                    f"Make sure you have your fingers on your right and left buttons and press the left "
                                    f"button when you are ready")
             while True:
+                add_text(screen, 0, 0, time.asctime(time.localtime()))
+                astro_conn.send('req')
                 msg = astro_conn.recv()
                 if msg[0] == 1:
                     break
-            print_text(screen, "Let's go!")
+            clearline(screen, 6)
+            clearline(screen, 7)
+            clearline(screen, 8)
+            clearline(screen, 9)
+            add_text(screen, 6, 0, " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
+            add_text(screen, 7, 0, "| Quickly go:              |")
+            add_text(screen, 8, 0, " __________________________")
+            time.sleep(2)
+            t_end = time.time() + 4
+            add_text(screen, 7, 15, "RIGHT -->")
+            astro_conn.send("req")
+            while time.time() < t_end:
+                if astro_conn.poll() is True:
+                    msg = astro_conn.recv()
+                    if msg[1] == 1:
+                        clearline(screen, 7)
+                        add_text(screen, 7, 0, "| Quickly go:              |")
+                        add_text(screen, 5, 0, "Nice Dodge!")
+                    if msg[0] == 1:
+                        oxy = 0
+                        volta = 0
+                        voltb = 0
+                        gamereadout(screen, oxy, volta, voltb)
+                        clearline(screen, 7)
+                        add_text(screen, 7, 0, "You went the wrong way and died, how t r a g i c")
+
+
+
+
+
 
 
 if __name__ == "__main__":
