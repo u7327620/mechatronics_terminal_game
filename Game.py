@@ -47,16 +47,22 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             volta = 5
             voltb = 5
             screen.clear()
-            while True:
-                gamereadout(screen, oxy, volta, voltb)
-                clearline(mainScreen, 7)
-                add_text(screen, 7, 0, astro_conn.recv())
-                add_text(screen, 8, 0, time.asctime(time.localtime()))
-                for msg in astro_conn.recv():
-                    if msg == "b1 p":
-                        volta -= 1
-                    if msg == "b2 p":
-                        voltb -= 1
+
+            gamereadout(screen, oxy, volta, voltb)
+            clearline(screen, 10)
+            add_text(screen, 10, 0, astro_conn.recv())
+            add_text(screen, 0, 0, time.asctime(time.localtime()), curses.A_DIM)
+            for i in range(10, -1, -1):
+                clearline(screen, 6)
+                add_text(screen, 6, 0, f"Hello Astronaut, this is ground control here, we are going to have lift off in:{i}")
+                time.sleep(1)
+            clearline(screen, 6)
+            add_text(screen, 6, 0, f"We have lift off!")
+            time.sleep(2)
+
+            for msg in astro_conn.recv():
+                pass
+
 
 
 

@@ -5,11 +5,11 @@ import time
 # Curses functions
 
 def gamereadout(screen, oxy, volta, voltb):
-    add_text(screen, 0, 10, f'Ship readout')
-    add_text(screen, 1, 0, f'=================================')
-    add_text(screen, 2, 0, f'Oxygen levels: {oxy}%')
-    add_text(screen, 3, 0, f'Voltage bus A: {volta}')
-    add_text(screen, 4, 0, f'Voltage bus B: {voltb}')
+    add_text(screen, 0, 100, f'Ship readout')
+    add_text(screen, 1, 90, f'=================================')
+    add_text(screen, 2, 95, f'Oxygen levels: {oxy}%')
+    add_text(screen, 3, 95, f'Voltage bus A: {volta}')
+    add_text(screen, 4, 95, f'Voltage bus B: {voltb}')
 
 
 def end_screen(screen):
@@ -17,6 +17,7 @@ def end_screen(screen):
     screen.keypad(False)
     curses.echo()
     curses.endwin()
+
 
 
 def start_screen():
@@ -34,8 +35,11 @@ def print_text(screen, text):
     screen.refresh()
 
 
-def add_text(screen, dest1, dest2, text):
-    screen.addstr(dest1, dest2, str(text))
+def add_text(screen, dest1, dest2, text, *extra):
+    if extra:
+        screen.addstr(dest1, dest2, str(text), extra[0])
+    else:
+        screen.addstr(dest1, dest2, str(text))
     screen.refresh()
 
 
