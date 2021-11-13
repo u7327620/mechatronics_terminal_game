@@ -2,6 +2,21 @@ import pyfirmata
 from pyfirmata import util
 import time
 
+class Board:
+    def __init__(self, path, conn, name):
+        self.path = path
+        self.conn = conn
+        self.board = name
+
+        self.board = pyfirmata.Arduino(self.path)
+        self.board.digital[3].mode = pyfirmata.INPUT
+        self.board.digital[2].mode = pyfirmata.OUTPUT
+        it = util.Iterator(self.board)
+        it.start()
+
+        conn.send(f'{self.board} Init complete')
+
+
 def astro_init(path, conn):
     Astronaut = pyfirmata.Arduino(path)
     Astronaut.digital[3].mode = pyfirmata.INPUT

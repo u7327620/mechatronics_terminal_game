@@ -4,7 +4,7 @@ import time
 
 # Curses functions
 
-def gametime(screen, oxy, volta, voltb):
+def gamereadout(screen, oxy, volta, voltb):
     screen.clear()
     add_text(screen, 0, 10, f'Ship readout')
     add_text(screen, 1, 0, f'=================================')

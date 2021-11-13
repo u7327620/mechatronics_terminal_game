@@ -43,7 +43,12 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
 
         if inp == ord('f'):  # if F, game time boys
             astro_conn.send('game')  # I deadass told the controllers "game" I think it's kinda funny tbh
-            gametime(screen, 100.0, 5, 5)
+            oxy = 100.0
+            volta = 5
+            voltb = 5
+            while True:
+                gamereadout(screen, oxy, volta, voltb)
+
 
 
 
