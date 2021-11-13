@@ -7,37 +7,46 @@ import time
 
 os.environ["TERM"] = "linux"
 
-def game(astro_conn, nature_conn, screen):
+def game(astro_conn, nature_conn, screen):  # main process, takes inputs from the controllers
 
-    flash_home(screen)
+    print_text(screen, "Initializing...")  # Just waiting until the nano sends a message back
     while True:
-        inp = screen.getch()
+        if astro_conn.recv() == "Init complete":
+            break
 
-        if inp == ord('w'):
+    flash_home(screen)  # Ye olde "gimme a menu screen" call, every good program has to have this
+
+    while True:  # First while True, menu screen / test screen
+        inp = screen.getch()  # This is the little dude handling our keyboard inputs
+
+        if inp == ord('w'):  # If a w then do the counting test
             counting(screen)
 
-        if inp == ord('e'):
-            astro_conn.send("blink")
+        if inp == ord('e'):  # if an e then do the blink test
+            astro_conn.send("blink")  # communicating that we wanna blink, communication is very important yknow
             print_text(screen, f"Should now blink, if not this should be fixed before playing\n"
-                               f"wait 5 seconds to return")
-            end_time = time.time() + 5
+                               f"wait 5 seconds to return")  # A juicy message to our players
+            end_time = time.time() + 5  # creating a variable that is 5 seconds into the future!!!!
             while True:
-                add_text(screen, 3, 0, f'{time.asctime(time.localtime())}')
-                msg = astro_conn.recv()
-                if msg:
-                    add_text(screen, 4, 0, f'The nano has responded with: {msg}')
+                add_text(screen, 3, 0, f'{time.asctime(time.localtime())}')  # just updating our time passed
                 if time.time() > end_time:
                     break
-            flash_home(screen)
+            flash_home(screen)  # Oh how I love our "gimme a menu screen" call
+
+        if inp == ord('q'):  # if a q, do button test
+            astro_conn.send("button")  # communicating that we want to button test, very important
+            end_time = time.time() + 4  # 4 seconds into the future!
+            while time.time() < end_time:
+                msg = astro_conn.recv()  # If you only tell things what to do and never listen, you will never truly
+                print_text(screen, msg)  # get a strong understanding of what is going on
+            flash_home(screen)  # My dearest menu screen, oh please cometh back and bless thine eyes with your presence
+
+        if inp == ord('f'):  # if F, game time boys
+            astro_conn.send('game')  # I deadass told the controllers "game" I think it's kinda funny tbh
 
 
 
-        if inp == ord('q'):
-            screen.clear()
-            while True:
-                msg = astro_conn.recv()
-                if msg:
-                    print_text(screen, msg)
+
 
 
 

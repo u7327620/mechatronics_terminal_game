@@ -9,18 +9,26 @@ def astro_init(path, conn):
     it = util.Iterator(Astronaut)
     it.start()
 
+    conn.send('Init complete')
     while True:
         # x = Astronaut.digital[3].read()
         msg = conn.recv()
         if msg == 'blink':
-            conn.send("blinking")
             Astronaut.digital[2].write(1)
             time.sleep(.5)
             Astronaut.digital[2].write(0)
             time.sleep(.5)
 
-        # if x is True:
-        #     conn.send("Digital[3] pressed")
-        # else:
-        #     conn.send("Digital[3] not pressed")
+        if msg == "button":
+            end_time = time.time() + 5
+            while time.time() < end_time:
+                if Astronaut.digital[3].read() is True:
+                    msg = 'pressed'
+                else:
+                    msg = 'not pressed'
+                conn.send(msg)
+                time.sleep(.05)
 
+        if msg == 'game':
+            while True:
+                pass
