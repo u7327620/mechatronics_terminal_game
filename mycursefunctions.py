@@ -5,7 +5,6 @@ import time
 # Curses functions
 
 def gamereadout(screen, oxy, volta, voltb):
-    screen.clear()
     add_text(screen, 0, 10, f'Ship readout')
     add_text(screen, 1, 0, f'=================================')
     add_text(screen, 2, 0, f'Oxygen levels: {oxy}%')
@@ -25,6 +24,7 @@ def start_screen():
     curses.noecho()
     curses.cbreak()
     screen.keypad(True)
+    curses.curs_set(0)
     return screen
 
 
@@ -45,6 +45,7 @@ def flash_home(screen):
                        "press q for button test\n"
                        "press w for terminal counting test\n"
                        "press e for astronaut blink test\n"
+                       "press r for nature blink test\n"
                        "press f to start the game\n")
     screen.refresh()
 
