@@ -4,6 +4,14 @@ import time
 
 # Curses functions
 
+def gametime(screen, oxy, volta, voltb):
+    screen.clear()
+    add_text(screen, 0, 10, f'Ship readout')
+    add_text(screen, 1, 0, f'=================================')
+    add_text(screen, 2, 0, f'Oxygen levels: {oxy}%')
+    add_text(screen, 3, 0, f'Voltage bus A: {volta}')
+    add_text(screen, 4, 0, f'Voltage bus B: {voltb}')
+
 
 def end_screen(screen):
     curses.nocbreak()
