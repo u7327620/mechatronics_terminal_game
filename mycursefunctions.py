@@ -1,5 +1,5 @@
 import curses
-
+import time
 
 # Curses functions
 def end_screen(screen):
@@ -32,3 +32,12 @@ def flash_home(screen):
                            "press w to count to 100\n"
                            "press e for single blink\n")
     screen.refresh()
+
+def counting(screen):
+    i = 0
+    while i <100:
+        i += 1
+        time.sleep(0.01)
+        print_text(screen, f'We are at {i}')
+    time.sleep(.5)
+    flash_home(screen)

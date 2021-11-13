@@ -8,9 +8,30 @@ os.environ["TERM"] = "linux"
 
 def game(astro_conn, nature_conn, screen):
 
+    flash_home(screen)
     while True:
-        msg = astro_conn.recv()
-        add_text(screen, 0, 0, msg)
+        inp = screen.getch()
+
+        if inp == ord('w'):
+            counting(screen)
+
+        if inp == ord('e'):
+            astro_conn.send('blink')
+            print_text(screen, f"Should now blink\n"
+                               f"press any key to retun\n")
+            while True:
+                retur = screen.getch()
+                if retur:
+                    flash_home(screen)
+                    break
+
+        if inp == ord('q'):
+            while True:
+                msg = astro_conn.recv()
+                print_text(screen, msg)
+
+
+
 
 
 if __name__ == "__main__":
