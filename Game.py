@@ -3,6 +3,7 @@ from multiprocessing import Pipe
 from mycursefunctions import *
 from myarduinofunctions import *
 import os
+import time
 
 os.environ["TERM"] = "linux"
 
@@ -16,19 +17,27 @@ def game(astro_conn, nature_conn, screen):
             counting(screen)
 
         if inp == ord('e'):
-            astro_conn.send('blink')
-            print_text(screen, f"Should now blink\n"
-                               f"press any key to retun\n")
+            astro_conn.send("blink")
+            print_text(screen, f"Should now blink, if not this should be fixed before playing\n"
+                               f"wait 5 seconds to return")
+            end_time = time.time() + 5
             while True:
-                retur = screen.getch()
-                if retur:
-                    flash_home(screen)
+                add_text(screen, 3, 0, f'{time.asctime(time.localtime())}')
+                msg = astro_conn.recv()
+                if msg:
+                    add_text(screen, 4, 0, f'The nano has responded with: {msg}')
+                if time.time() > end_time:
                     break
+            flash_home(screen)
+
+
 
         if inp == ord('q'):
+            screen.clear()
             while True:
                 msg = astro_conn.recv()
-                print_text(screen, msg)
+                if msg:
+                    print_text(screen, msg)
 
 
 

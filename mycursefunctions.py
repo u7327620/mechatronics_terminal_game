@@ -28,9 +28,8 @@ def flash_home(screen):
     screen.clear()
     print_text(screen, "Welcome to the game\n"
                            "press q to start\n"
-                           "press z to exit\n"
-                           "press w to count to 100\n"
-                           "press e for single blink\n")
+                           "press w for terminal counting test\n"
+                           "press e for astronaut blink test\n")
     screen.refresh()
 
 def counting(screen):

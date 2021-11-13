@@ -1,15 +1,6 @@
 import pyfirmata
 from pyfirmata import util
 import time
-import multiprocessing as mp
-
-
-
-def blink(board):
-    board.digital[2].write(1)
-    time.sleep(.5)
-    board.digital[2].write(0)
-    time.sleep(.5)
 
 def astro_init(path, conn):
     Astronaut = pyfirmata.Arduino(path)
@@ -19,16 +10,17 @@ def astro_init(path, conn):
     it.start()
 
     while True:
-        x = Astronaut.digital[3].read()
+        # x = Astronaut.digital[3].read()
         msg = conn.recv()
+        if msg == 'blink':
+            conn.send("blinking")
+            Astronaut.digital[2].write(1)
+            time.sleep(.5)
+            Astronaut.digital[2].write(0)
+            time.sleep(.5)
 
-        if msg == "blink":
-            x = mp.Process(target=blink, args=(Astronaut,))
-            x.start()
-
-        if x is True:
-            conn.send("Digital[3] pressed")
-        else:
-            conn.send("Digital[3] not pressed")
-        time.sleep(.05)
+        # if x is True:
+        #     conn.send("Digital[3] pressed")
+        # else:
+        #     conn.send("Digital[3] not pressed")
 
