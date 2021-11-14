@@ -74,10 +74,10 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
                                    f"button when you are ready")
             while True:
                 add_text(screen, 0, 0, time.asctime(time.localtime()))
-                astro_conn.send('req')
                 msg = astro_conn.recv()
                 if msg[0] == 1:
                     break
+
             clearline(screen, 6)
             clearline(screen, 7)
             clearline(screen, 8)
@@ -88,21 +88,19 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             time.sleep(2)
             t_end = time.time() + 4
             add_text(screen, 7, 15, "RIGHT -->")
-            astro_conn.send("req")
+            astro_conn.recv()  # This looks weird but it clears the receive from the previous
+            time.sleep(0.05)
             while time.time() < t_end:
+                add_text(screen, 0, 0, time.asctime(time.localtime()))
                 if astro_conn.poll() is True:
                     msg = astro_conn.recv()
+                    add_text(screen, 10, 0, msg)
                     if msg[1] == 1:
                         clearline(screen, 7)
                         add_text(screen, 7, 0, "| Quickly go:              |")
                         add_text(screen, 5, 0, "Nice Dodge!")
                     if msg[0] == 1:
-                        oxy = 0
-                        volta = 0
-                        voltb = 0
-                        gamereadout(screen, oxy, volta, voltb)
-                        clearline(screen, 7)
-                        add_text(screen, 7, 0, "You went the wrong way and died, how t r a g i c")
+                        lose(screen, "You went the wrong way and died, how t r a g i c")
 
 
 

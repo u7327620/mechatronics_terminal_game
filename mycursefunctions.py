@@ -5,12 +5,21 @@ import time
 # Curses functions
 
 def gamereadout(screen, oxy, volta, voltb):
+    clearline(screen, 3)
     add_text(screen, 0, 100, f'Ship readout')
     add_text(screen, 1, 90, f'=================================')
     add_text(screen, 2, 95, f'Oxygen levels: {oxy}%')
     add_text(screen, 3, 95, f'Voltage bus A: {volta}')
     add_text(screen, 4, 95, f'Voltage bus B: {voltb}')
 
+def lose(screen, msg):
+    oxy = 0
+    volta = 0
+    voltb = 0
+    gamereadout(screen, oxy, volta, voltb)
+    clearline(screen, 7)
+    add_text(screen, 7, 0, msg)
+    end_screen(screen)
 
 def end_screen(screen):
     curses.nocbreak()

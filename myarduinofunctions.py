@@ -36,10 +36,9 @@ def astro_init(path, conn):
 
         if msg == 'game':
             while True:
-                if conn.recv() == "req":
-                    msgtosend = [0, 0]
-                    if Astronaut.digital[3].read() is True:
-                        msgtosend[0] = 1
-                    if Astronaut.digital[4].read() is True:
-                        msgtosend[1] = 1
-                    conn.send(msgtosend)
+                msgtosend = [0, 0]
+                if Astronaut.digital[3].read() is True:
+                    msgtosend[0] = 1
+                if Astronaut.digital[4].read() is True:
+                    msgtosend[1] = 1
+                conn.send(msgtosend)
