@@ -8,12 +8,11 @@ import time
 os.environ["TERM"] = "linux"
 
 
-def print_time(screen):
-    add_text(screen, 0, 0, time.asctime(time.localtime()))
-
-
 def dodge(screen, conn, timetoreact, delay, direction):
-    time.sleep(delay)
+    if delay is int:
+        printtimeandsleep(screen, delay)
+    else:
+        time.sleep(delay)
     add_text(screen, 0, 0, time.asctime(time.localtime()))
     clear_buffer(conn)
     t_end = time.time() + timetoreact
@@ -87,16 +86,15 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
 
             gamereadout(screen, oxy, volta, voltb)
             for i in range(10, -1, -1):
-                add_text(screen, 0, 0, time.asctime(time.localtime()))
                 clearline(screen, 6)
                 add_text(screen, 6, 0, f"Hello Astronaut, this is ground control here, we are going to have lift off "
                                        f"in: {i}\nI am going need you to manage the oxygen and voltage levels"
                                        f" on your ship\nPay attention for messages from me that will pop up down here"
                                        f" as I will be informing you what your buttons do")
-                time.sleep(1)
+                printtimeandsleep(screen, 1)
             clearline(screen, 6, 7, 8)
             add_text(screen, 6, 0, f"We have lift off!")
-            time.sleep(2)
+            printtimeandsleep(screen, 2)
             add_text(screen, 0, 0, time.asctime(time.localtime()))
             clearline(screen, 6)
             add_text(screen, 6, 0, f"Emergency!\n"
@@ -115,7 +113,7 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             add_text(screen, 6, 0, " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
             add_text(screen, 7, 0, "| Quickly go:              |")
             add_text(screen, 8, 0, " __________________________")
-            time.sleep(2)
+            printtimeandsleep(screen, 2)
 
             # The code in the function looks dumb at first glance but it's just clearing the buffer that built up during
             # the intro process, probably better to make a separate process that handles the controller
@@ -124,7 +122,7 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             dodge(screen, astro_conn, 4, 1, "<-- LEFT")
             dodge(screen, astro_conn, 4, 1, "<-- LEFT")
             add_text(screen, 7, 0, "| They're speeding up!     |")
-            time.sleep(1)
+            printtimeandsleep(screen, 1)
             clearline(screen, 7)
             add_text(screen, 7, 0, "| Quickly go:              |")
             dodge(screen, astro_conn, 2, 0.5, "<-- LEFT")
@@ -143,15 +141,67 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             add_text(screen, 5, 0, "You made it through! Good job astronaut, hopefully no other \n"
                                    "t r a g i c and u n e x p e c t e d coincidences occur during our "
                                    "flight")
+            printtimeandsleep(screen, 8)
             clearline(screen, 5, 6)
             add_text(screen, 5, 0, "If you look out your metaphorical window, you'll see the bright spherical "
                                    "mass known as the moon\nAs you should have figured out from your thousands of hours"
                                    " of training, that will be our destination")
+            printtimeandsleep(screen, 8)
             for i in range(5):
-                time.sleep(1)
-                print_time(screen)  # I got tired of copying one line across and made a function for a single line of
-                # code, I'm honestly pretty proud of this decision
-            clearline(screen, 5, 6, 7)  # I also bothered to make this recursive after my 50th time calling it
+                printtimeandsleep(screen, 1)
+                oxy -= 7.5
+                gamereadout(screen, oxy, volta, voltb)
+            add_text(screen, 5, 0, "CRITICAL ALERT\nThe oxygen levels are rapidly dropping. We believe the comet shower"
+                                   " entered the oxygen tanks personal space and now it's leaking\nWe've sent out the "
+                                   "nano bots to fix but we will need you to patch it up temporarily\n"
+                                   "Mash the left button to patch!")
+            while True:
+                msg = astro_conn.recv()
+                if msg[0] == 1:
+                    break
+
+            t = int(time.time())
+            t_end = t + 20
+            t1 = t+3
+            t2 = t+6
+            t3 = t+9
+            t4 = t+12
+            t5 = t+15
+            t6 = t+18
+            t_leak = [t1, t2, t3, t4, t5, t6]
+            clear_buffer(astro_conn)
+            while int(time.time()) < t_end:
+                clear_buffer(astro_conn)
+                print_time(screen)
+                gamereadout(screen, oxy, volta, voltb)
+                msg = astro_conn.recv()
+                if int(time.time()) in t_leak:
+                    oxy -= 15
+                    t = int(time.time())
+                    t_leak.remove(t)
+                if msg[0] == 1:
+                    while True:
+                        if int(time.time()) in t_leak:
+                            oxy -= 7.5
+                            t = int(time.time())
+                            t_leak.remove(t)
+                        msg = astro_conn.recv()
+                        if msg[0] == 0:
+                            if oxy < 100.0:
+                                oxy += 1.0
+                            break
+                if oxy < 0.0:
+                    lose(screen, "You got no more oxygen, you die")
+
+            clearline(screen, 5, 6, 7, 8, 9, 10)
+            add_text(screen, 5, 0, "Good job astronaut!, the nano bots have reached the oxygen tank and you\n"
+                                   "should now see it filling up ")
+            while oxy < 100.0:
+                oxy += 1
+                gamereadout(screen, oxy, volta, voltb)
+                time.sleep(0.01)
+
+
 
 if __name__ == "__main__":
     astronaut_conn, game_conn1 = Pipe(True)  # Like mario, we have a pipe to jump message through

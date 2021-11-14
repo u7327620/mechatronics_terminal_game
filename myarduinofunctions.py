@@ -47,5 +47,5 @@ def astro_init(path, conn):
                 if Astronaut.digital[4].read() is True:
                     msgtosend[1] = 1
                 conn.send(msgtosend)
-                time.sleep(0.1)
+                time.sleep(0.05)
 

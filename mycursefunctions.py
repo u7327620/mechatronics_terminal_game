@@ -4,6 +4,15 @@ import time
 
 # Curses functions
 
+
+def print_time(screen):
+    add_text(screen, 0, 0, time.asctime(time.localtime()))
+
+def printtimeandsleep(screen, sleeptime):
+    for i in range(sleeptime):
+        time.sleep(1)
+        print_time(screen)
+
 def gamereadout(screen, oxy, volta, voltb):
     clearline(screen, 3)
     add_text(screen, 0, 100, f'Ship readout')
