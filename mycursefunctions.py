@@ -14,7 +14,7 @@ def printtimeandsleep(screen, sleeptime):
         print_time(screen)
 
 def gamereadout(screen, oxy, volta, voltb):
-    clearline(screen, 3)
+    clearline(screen, 2, 3, 4)
     add_text(screen, 0, 100, f'Ship readout')
     add_text(screen, 1, 90, f'=================================')
     add_text(screen, 2, 95, f'Oxygen levels: {oxy}%')

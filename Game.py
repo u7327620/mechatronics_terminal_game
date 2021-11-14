@@ -80,8 +80,8 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             astro_conn.send('game')  # une bruh momento game funi innit buv こわいおね？
 
             oxy = 100.0
-            volta = 5
-            voltb = 5
+            volta = 20
+            voltb = 20
             screen.clear()
 
             gamereadout(screen, oxy, volta, voltb)
@@ -103,6 +103,7 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
                                    f"a series of quicktime events because that's how you dodge meteors in a terminal\n"
                                    f"As we all know, comets wait for you to be ready so make sure you have your fingers"
                                    f" on your right and left buttons and press the left button when you are ready")
+            clear_buffer(astro_conn)
             while True:
                 add_text(screen, 0, 0, time.asctime(time.localtime()))
                 msg = astro_conn.recv()
@@ -122,6 +123,7 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             dodge(screen, astro_conn, 4, 1, "<-- LEFT")
             dodge(screen, astro_conn, 4, 1, "<-- LEFT")
             add_text(screen, 7, 0, "| They're speeding up!     |")
+            clear_buffer(astro_conn)
             printtimeandsleep(screen, 1)
             clearline(screen, 7)
             add_text(screen, 7, 0, "| Quickly go:              |")
@@ -176,13 +178,13 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
                 gamereadout(screen, oxy, volta, voltb)
                 msg = astro_conn.recv()
                 if int(time.time()) in t_leak:
-                    oxy -= 15
+                    oxy -= 18
                     t = int(time.time())
                     t_leak.remove(t)
                 if msg[0] == 1:
                     while True:
                         if int(time.time()) in t_leak:
-                            oxy -= 7.5
+                            oxy -= 18
                             t = int(time.time())
                             t_leak.remove(t)
                         msg = astro_conn.recv()
@@ -190,7 +192,8 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
                             if oxy < 100.0:
                                 oxy += 1.0
                             break
-                if oxy < 0.0:
+                if oxy <= 0.0:
+                    clearline(screen, 5, 6, 7, 8, 9, 10)
                     lose(screen, "You got no more oxygen, you die")
 
             clearline(screen, 5, 6, 7, 8, 9, 10)
@@ -199,7 +202,82 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
             while oxy < 100.0:
                 oxy += 1
                 gamereadout(screen, oxy, volta, voltb)
-                time.sleep(0.01)
+                time.sleep(0.1)
+            oxy = 100.0
+            printtimeandsleep(screen, 1)
+            gamereadout(screen, oxy, volta, voltb)
+            clearline(screen, 5, 6)
+            add_text(screen, 5, 0, "Your metaphorical cabin shakes as the ship lowers to the moons surface\n"
+                                   "You've done it, you're on the moon surface. As you exit your craft you see a"
+                                   " group of 30 aliens")
+            printtimeandsleep(screen, 4)
+            for i in range(3):
+                printtimeandsleep(screen, 1)
+                volta -= 1
+                voltb -= 1
+                gamereadout(screen, oxy, volta, voltb)
+            clearline(screen, 5, 6)
+            add_text(screen, 5, 0, "Critical Alert\n"
+                                   "These aliens are the well known electro succ aliens\n"
+                                   "They're stealing our volts! You're going to die! Remove any doubts in your mind"
+                                   " it's us or them\n"
+                                   "Quickly astronaut, commit genocide on their species by mashing the "
+                                   "left button!\n")
+            clear_buffer(astro_conn)
+            while True:
+                msg = astro_conn.recv()
+                if msg[0] == 1:
+                    break
+            t = int(time.time())
+            t1 = t + 2
+            t2 = t + 4
+            t3 = t + 6
+            t4 = t + 8
+            t5 = t + 10
+            t6 = t + 12
+            t7 = t + 14
+            t8 = t + 16
+            t9 = t + 18
+            t10 = t + 20
+            t_yoink = [t1, t2, t3, t4, t5, t6, t7, t8, t9, t10]
+            aliens = 30
+            clearline(screen, 5, 6, 7, 8, 9)
+            clear_buffer(astro_conn)
+            while volta > 0 and aliens > 0:
+                voltb = volta
+                clearline(screen, 5)
+                add_text(screen, 5, 0, f"Aliens left: {aliens}")
+                gamereadout(screen, oxy, volta, voltb)
+                msg = astro_conn.recv()
+                if int(time.time()) in t_yoink:
+                    volta -= 3
+                    t_yoink.remove(int(time.time()))
+                if msg[0] == 1:
+                    while True:
+                        if int(time.time()) in t_yoink:
+                            volta -= 3
+                            t_yoink.remove(int(time.time()))
+                        msg = astro_conn.recv()
+                        if msg[0] == 0:
+                            aliens -= 1
+                            break
+            if volta < 0:
+                lose(screen, "They zucced your volts away and you died on the moon")
+
+            if aliens <= 0:
+                clearline(screen, 5, 6, 7, 8, 9)
+                add_text(screen, 5, 0, "Good job astronaut! The natives have been exterminated!\n"
+                                       "We have a big PR issue down here on earth so we're going to have to pull you"
+                                       " out now\nLet's get you back home in time for chow")
+                printtimeandsleep(screen, 12)
+
+            clearline(screen, 5, 6, 7, 8, 9)
+            print_text(screen, "And that's all folks, hope you enjoyed your journey")
+            end_screen(screen)
+
+
+
+
 
 
 
