@@ -19,6 +19,8 @@ def lose(screen, msg):
     gamereadout(screen, oxy, volta, voltb)
     clearline(screen, 7)
     add_text(screen, 7, 0, msg)
+    add_text(screen, 10, 0, "Just like in real life, when you die you have to start over to play again"
+                            "\nJust re-run the script to start again")
     end_screen(screen)
 
 def end_screen(screen):
@@ -26,6 +28,7 @@ def end_screen(screen):
     screen.keypad(False)
     curses.echo()
     curses.endwin()
+    quit()
 
 def start_screen():
     screen = curses.initscr()  # Initialize screen
@@ -64,7 +67,6 @@ def flash_home(screen):
                        "press f to start the game\n")
     screen.refresh()
 
-
 def counting(screen):
     i = 0
     while i < 100:
@@ -74,6 +76,7 @@ def counting(screen):
     time.sleep(.5)
     flash_home(screen)
 
-def clearline(screen, line):
-    screen.move(line, 0)
-    screen.clrtoeol()
+def clearline(screen, *lines):
+    for line in lines:
+        screen.move(line, 0)
+        screen.clrtoeol()

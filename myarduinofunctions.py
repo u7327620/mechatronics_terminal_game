@@ -2,6 +2,11 @@ import pyfirmata
 from pyfirmata import util
 import time
 
+def clear_buffer(conn):
+    while True:
+        while conn.poll() is True:
+            x = conn.recv()
+        break
 
 def astro_init(path, conn):
     Astronaut = pyfirmata.Arduino(path)
@@ -42,3 +47,5 @@ def astro_init(path, conn):
                 if Astronaut.digital[4].read() is True:
                     msgtosend[1] = 1
                 conn.send(msgtosend)
+                time.sleep(0.1)
+

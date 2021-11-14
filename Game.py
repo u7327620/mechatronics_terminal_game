@@ -8,6 +8,41 @@ import time
 os.environ["TERM"] = "linux"
 
 
+def print_time(screen):
+    add_text(screen, 0, 0, time.asctime(time.localtime()))
+
+
+def dodge(screen, conn, timetoreact, delay, direction):
+    time.sleep(delay)
+    add_text(screen, 0, 0, time.asctime(time.localtime()))
+    clear_buffer(conn)
+    t_end = time.time() + timetoreact
+    add_text(screen, 7, 15, direction)
+    clearline(screen, 5)
+    while time.time() < t_end:
+        if conn.poll() is True:
+            msg = conn.recv()
+            add_text(screen, 10, 0, msg)
+            if direction == "<-- LEFT":
+                if msg[0] == 1:
+                    clearline(screen, 7)
+                    add_text(screen, 7, 0, "| Quickly go:              |")
+                    add_text(screen, 5, 0, "Nice Dodge!")
+                    return
+                if msg[1] == 1:
+                    lose(screen, "You went the wrong way and died, how t r a g i c")
+
+            if direction == "RIGHT -->":
+                if msg[1] == 1:
+                    clearline(screen, 7)
+                    add_text(screen, 7, 0, "| Quickly go:              |")
+                    add_text(screen, 5, 0, "Nice Dodge!")
+                    return
+                if msg[0] == 1:
+                    lose(screen, "You went the wrong way and died, how t r a g i c")
+    lose(screen, "You took too long and your ship got a smooch from a comet ")
+
+
 def game(astro_conn, nature_conn, screen):  # main process, takes inputs from the controllers
     print_text(screen, "Initializing...")  # Just waiting until the two nanos sends a message back
     while True:
@@ -59,54 +94,64 @@ def game(astro_conn, nature_conn, screen):  # main process, takes inputs from th
                                        f" on your ship\nPay attention for messages from me that will pop up down here"
                                        f" as I will be informing you what your buttons do")
                 time.sleep(1)
-            clearline(screen, 6)
-            clearline(screen, 7)
-            clearline(screen, 8)
+            clearline(screen, 6, 7, 8)
             add_text(screen, 6, 0, f"We have lift off!")
             time.sleep(2)
             add_text(screen, 0, 0, time.asctime(time.localtime()))
             clearline(screen, 6)
-            add_text(screen, 6, 0, f"Emergency!\n" 
+            add_text(screen, 6, 0, f"Emergency!\n"
                                    f"A comet shower has been knocked off course and is heading directly towards your "
                                    f"ship\nThis is a  t e r r i b l e  coincidence, I'm going to need you to react to "
                                    f"a series of quicktime events because that's how you dodge meteors in a terminal\n"
-                                   f"Make sure you have your fingers on your right and left buttons and press the left "
-                                   f"button when you are ready")
+                                   f"As we all know, comets wait for you to be ready so make sure you have your fingers"
+                                   f" on your right and left buttons and press the left button when you are ready")
             while True:
                 add_text(screen, 0, 0, time.asctime(time.localtime()))
                 msg = astro_conn.recv()
                 if msg[0] == 1:
                     break
 
-            clearline(screen, 6)
-            clearline(screen, 7)
-            clearline(screen, 8)
-            clearline(screen, 9)
+            clearline(screen, 6, 7, 8, 9, 10)
             add_text(screen, 6, 0, " ‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾")
             add_text(screen, 7, 0, "| Quickly go:              |")
             add_text(screen, 8, 0, " __________________________")
             time.sleep(2)
-            t_end = time.time() + 4
-            add_text(screen, 7, 15, "RIGHT -->")
-            astro_conn.recv()  # This looks weird but it clears the receive from the previous
-            time.sleep(0.05)
-            while time.time() < t_end:
-                add_text(screen, 0, 0, time.asctime(time.localtime()))
-                if astro_conn.poll() is True:
-                    msg = astro_conn.recv()
-                    add_text(screen, 10, 0, msg)
-                    if msg[1] == 1:
-                        clearline(screen, 7)
-                        add_text(screen, 7, 0, "| Quickly go:              |")
-                        add_text(screen, 5, 0, "Nice Dodge!")
-                    if msg[0] == 1:
-                        lose(screen, "You went the wrong way and died, how t r a g i c")
 
-
-
-
-
-
+            # The code in the function looks dumb at first glance but it's just clearing the buffer that built up during
+            # the intro process, probably better to make a separate process that handles the controller
+            # inputs and passes it to this process but that would take the rest of the day and I need to do maths study
+            dodge(screen, astro_conn, 4, 1, "RIGHT -->")
+            dodge(screen, astro_conn, 4, 1, "<-- LEFT")
+            dodge(screen, astro_conn, 4, 1, "<-- LEFT")
+            add_text(screen, 7, 0, "| They're speeding up!     |")
+            time.sleep(1)
+            clearline(screen, 7)
+            add_text(screen, 7, 0, "| Quickly go:              |")
+            dodge(screen, astro_conn, 2, 0.5, "<-- LEFT")
+            dodge(screen, astro_conn, 2, 0.5, "RIGHT -->")
+            dodge(screen, astro_conn, 1, 0.5, "RIGHT -->")
+            dodge(screen, astro_conn, 1, 0.5, "RIGHT -->")
+            dodge(screen, astro_conn, 1, 0.5, "<-- LEFT")
+            dodge(screen, astro_conn, 1, 0.2, "<-- LEFT")
+            dodge(screen, astro_conn, 1, 0.5, "RIGHT -->")
+            dodge(screen, astro_conn, 1, 0.2, "RIGHT -->")
+            dodge(screen, astro_conn, 1, 0.2, "<-- LEFT")
+            dodge(screen, astro_conn, 1, 0.2, "<-- LEFT")
+            dodge(screen, astro_conn, 1, 0.2, "RIGHT -->")
+            clearline(screen, 4, 5, 6, 7, 8, 9, 10)
+            gamereadout(screen, oxy, volta, voltb)
+            add_text(screen, 5, 0, "You made it through! Good job astronaut, hopefully no other \n"
+                                   "t r a g i c and u n e x p e c t e d coincidences occur during our "
+                                   "flight")
+            clearline(screen, 5, 6)
+            add_text(screen, 5, 0, "If you look out your metaphorical window, you'll see the bright spherical "
+                                   "mass known as the moon\nAs you should have figured out from your thousands of hours"
+                                   " of training, that will be our destination")
+            for i in range(5):
+                time.sleep(1)
+                print_time(screen)  # I got tired of copying one line across and made a function for a single line of
+                # code, I'm honestly pretty proud of this decision
+            clearline(screen, 5, 6, 7)  # I also bothered to make this recursive after my 50th time calling it
 
 if __name__ == "__main__":
     astronaut_conn, game_conn1 = Pipe(True)  # Like mario, we have a pipe to jump message through
