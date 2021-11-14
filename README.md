@@ -1,0 +1,6 @@
+# mechatronics_terminal_game
+
+This is for my year 11 mechatronics class. To use the code it requires an arduino linked up with a button input on port 3 and 4. The arduino needs to be running
+standard firmata. Make sure to update the path variable to that of your arduino.
+
+The game should work cross platform as long as the os.environ variable is changed to the operating system of choice
