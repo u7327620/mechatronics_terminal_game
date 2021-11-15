@@ -6,6 +6,7 @@ import os
 import time
 
 os.environ["TERM"] = "linux"  # sets environment for curses
+path = '/dev/ttyUSB0'
 
 
 def dodge(screen, conn, timetoreact, delay, direction):  # This is the dodge function for the first quicktime event
@@ -286,7 +287,7 @@ if __name__ == "__main__":  # This is just a funky python guard that will stop t
     # accidentally imported instead of directly run. Very unlikely that it will be but, hey, I've done dumber!
     astronaut_conn, game_conn1 = Pipe(True)  # Like mario, we have a pipe to jump messages through
     mainScreen = start_screen()  # Start our screen
-    x = mp.Process(target=astro_init, args=('/dev/ttyUSB0', game_conn1,))  # Multiprocess create astro controller
+    x = mp.Process(target=astro_init, args=(path, game_conn1,))  # Multiprocess create astro controller
     y = mp.Process(target=game, args=(astronaut_conn, 0, mainScreen))  # Multiprocess create the game
     x.start()  # Multiprocess start astro controller process
     y.start()  # Multiprocess start game process
