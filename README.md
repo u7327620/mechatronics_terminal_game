@@ -3,15 +3,12 @@
 This is for my year 11 mechatronics class. Really just using the repo to look through and visualise the design process over time. 
 Should you wish to re-create the project ...
 
-The code requires an arduino with a button input on port 3 and 4. The arduino needs to be runningstandard firmata from the arduino
+The code requires an arduino with a button input on port 3 and 4. The arduino needs to be running standard firmata from the arduino
 ide sketch library. Make sure to update the path variable to that of your arduino.
-
-This was all made in pycharm venv with terminal emulation, if you want to run it without a venv you can make your own exe
-because I got maths to study for 😎
 
 The game should work cross platform as long as the os.environ variable is changed to the operating system of choice
 
-Step by Step:
+Step by Step with Virtual Environment:
 
 1: git clone {this repo}
 
