@@ -24,6 +24,9 @@ Step by Step without Virtual Environment:
 6: python3 Game.py
 
 
+or
+
+
 Step by Step with Virtual Environment:
 
 1: git clone {this repo}
