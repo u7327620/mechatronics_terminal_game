@@ -14,12 +14,21 @@ The game should work cross platform as long as the os.environ variable is change
 Step by Step:
 
 1: git clone {this repo}
+
 2: navigate to the repo on your file system
+
 3: python3 -m venv {Path to this repo}
+
 4: navigate to the bin folder
+
 5: source activate  # You have now made the python virtual environment
+
 6: exit the bin folder and enter the game folder
+
 7: pip3 install -r requirements.txt
+
 8: Change the os.environm["TERM"] = To your operating system
+
 9: Change the path = to the arduino controller usb port
+
 10: python3 Game.py
