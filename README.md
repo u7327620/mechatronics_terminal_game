@@ -6,7 +6,8 @@ Should you wish to re-create the project ...
 The code requires an arduino with a button input on port 3 and 4. The arduino needs to be running standard firmata from the arduino
 ide sketch library. Make sure to update the path variable to that of your arduino.
 
-The game should work cross platform as long as the os.environ variable is changed to the operating system of choice
+This game only works on unix based systems that have a terminal that supports curses. If you want it to work on a windows machine,
+you will need an abstraction of the curses library and change any curses functions over to the windows abstraction.
 
 
 Step by Step without Virtual Environment:
@@ -17,7 +18,7 @@ Step by Step without Virtual Environment:
 
 3: pip3 install -r requirements.txt
 
-4: change the os.environm["TERM"] = To your operating system
+4: change the os.environm["TERM"] = To your terminal of choice
 
 5: change the path = to the arduino controller usb port
 
@@ -43,7 +44,7 @@ Step by Step with Virtual Environment:
 
 7: pip3 install -r requirements.txt
 
-8: Change the os.environm["TERM"] = To your operating system
+8: Change the os.environm["TERM"] = To your terminal of choice
 
 9: Change the path = to the arduino controller usb port
 
