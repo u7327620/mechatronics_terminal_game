@@ -8,6 +8,22 @@ ide sketch library. Make sure to update the path variable to that of your arduin
 
 The game should work cross platform as long as the os.environ variable is changed to the operating system of choice
 
+
+Step by Step without Virtual Environment:
+
+1: git clone {this repo}
+
+2: navigate to the repo on your file system
+
+3: pip3 install -r requirements.txt
+
+4: change the os.environm["TERM"] = To your operating system
+
+5: change the path = to the arduino controller usb port
+
+6: python3 Game.py
+
+
 Step by Step with Virtual Environment:
 
 1: git clone {this repo}
@@ -29,3 +45,6 @@ Step by Step with Virtual Environment:
 9: Change the path = to the arduino controller usb port
 
 10: python3 Game.py
+
+
+
