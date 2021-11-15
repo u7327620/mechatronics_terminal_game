@@ -10,3 +10,16 @@ This was all made in pycharm venv with terminal emulation, if you want to run it
 because I got maths to study for 😎
 
 The game should work cross platform as long as the os.environ variable is changed to the operating system of choice
+
+Step by Step:
+
+1: git clone {this repo}
+2: navigate to the repo on your file system
+3: python3 -m venv {Path to this repo}
+4: cd bin
+5: source activate  # You have now made the python virtual environment
+6: cd ..
+7: pip3 install -r requirements.txt
+8: Change the os.environm["TERM"] = To your operating system
+9: Change the path = to the arduino controller usb port
+10: python3 Game.py
